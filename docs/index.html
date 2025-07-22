@@ -3,15 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>index</title>
+    <style>
+        img {
+            cursor: pointer;
+            margin: 10px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+        img:hover {
+            border-color: #007bff;
+        }
+    </style>
 </head>
 <body>
 <ul>
     <ui>
-        <img src="./img/sleep.jpg" />
-        <img src="./img/reverse.jpg" />
-        <img src="./img/firecat.jpg" />
+        <img src="./img/sleep.jpg" onclick="copyImageUrl(this)" />
+        <img src="./img/reverse.jpg" onclick="copyImageUrl(this)" />
+        <img src="./img/firecat.jpg" onclick="copyImageUrl(this)" />
     </ui>
 </ul>
+
+<script>
+    function copyImageUrl(imgElement) {
+        // 画像の絶対URLを取得
+        const imageUrl = imgElement.src;
+        
+        // クリップボードにコピー
+        navigator.clipboard.writeText(imageUrl).then(function() {
+            // コピー成功時の表示
+            showCopyMessage('画像URLをクリップボードにコピーしました！');
+        }).catch(function(err) {
+            // fallback: 古いブラウザ対応
+            const textArea = document.createElement('textarea');
+            textArea.value = imageUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showCopyMessage('画像URLをクリップボードにコピーしました！');
+        });
+    }
+    
+    function showCopyMessage(message) {
+        // 既存のメッセージがあれば削除
+        const existingMessage = document.getElementById('copyMessage');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        // メッセージ要素を作成
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'copyMessage';
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+        `;
+        
+        document.body.appendChild(messageDiv);
+        
+        // 3秒後にメッセージを削除
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
+    }
+</script>
 
 </body>
 </html>
