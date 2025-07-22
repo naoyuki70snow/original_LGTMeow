@@ -29,19 +29,25 @@
         // 画像の絶対URLを取得
         const imageUrl = imgElement.src;
         
+        // 画像ファイル名を取得（alt textとして使用）
+        const imageName = imageUrl.split('/').pop().split('.')[0];
+        
+        // Markdown形式の画像リンクを作成
+        const markdownImage = `![${imageName}](${imageUrl})`;
+        
         // クリップボードにコピー
-        navigator.clipboard.writeText(imageUrl).then(function() {
+        navigator.clipboard.writeText(markdownImage).then(function() {
             // コピー成功時の表示
-            showCopyMessage('画像URLをクリップボードにコピーしました！');
+            showCopyMessage('Markdown画像リンクをクリップボードにコピーしました！');
         }).catch(function(err) {
             // fallback: 古いブラウザ対応
             const textArea = document.createElement('textarea');
-            textArea.value = imageUrl;
+            textArea.value = markdownImage;
             document.body.appendChild(textArea);
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            showCopyMessage('画像URLをクリップボードにコピーしました！');
+            showCopyMessage('Markdown画像リンクをクリップボードにコピーしました！');
         });
     }
     
